@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "APIApp"
+rootProject.name = "MovieComposeApp"
 include(":app")
  
