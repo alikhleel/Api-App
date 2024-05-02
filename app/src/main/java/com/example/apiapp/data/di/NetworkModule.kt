@@ -48,12 +48,4 @@ object NetworkModule {
             .build()
             .create(MovieApi::class.java)
     }
-
-//    @Singleton
-//    @Provides
-//    fun provideMovieApiService(
-//        retrofit: Retrofit
-//    ): MovieApi = retrofit.create(
-//        MovieApi::class.java
-//    )
 }

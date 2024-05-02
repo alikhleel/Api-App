@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class UpcComingMoviesViewModel @Inject constructor(
+class UpComingMoviesViewModel @Inject constructor(
     private val getUpComingMoviesUseCase: GetUpComingMoviesUseCase
 ) : ViewModel() {
     var upComingMovies: MutableState<UIState<UpComingResponse>> = mutableStateOf(UIState.Loading())
