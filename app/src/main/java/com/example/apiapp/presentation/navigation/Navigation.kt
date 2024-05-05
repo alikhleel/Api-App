@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.apiapp.presentation.screens.onBoarding.OnBoardingScreen
@@ -29,9 +30,7 @@ fun AppNavHost(
 ) {
     val onBoardingViewModel: OnBoardingViewModel = hiltViewModel()
     NavHost(
-        modifier = modifier,
-        navController = navController,
-        startDestination = onBoardingViewModel.startDestination
+        modifier = modifier, navController = navController, startDestination = onBoardingViewModel.startDestination
     ) {
         composable(NavigationItem.OnBoarding.route) {
             OnBoardingScreen(navController, onBoardingViewModel)
@@ -45,5 +44,11 @@ fun AppNavHost(
 
             UpComingMoviesScreen(navController, viewModel)
         }
+    }
+}
+
+fun NavOptionsBuilder.popUpToTop(navController: NavHostController) {
+    popUpTo(navController.currentBackStackEntry?.destination?.route ?: return) {
+        inclusive = true
     }
 }

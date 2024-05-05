@@ -38,6 +38,7 @@ import androidx.navigation.NavHostController
 import com.example.apiapp.R
 import com.example.apiapp.model.TipPage
 import com.example.apiapp.presentation.navigation.Screen
+import com.example.apiapp.presentation.navigation.popUpToTop
 import kotlinx.coroutines.launch
 
 @Composable
@@ -46,7 +47,9 @@ fun OnBoardingScreen(
 ) {
     val onBoardingCompleted by viewModel.onBoardingCompleted.collectAsState()
     if (onBoardingCompleted) {
-        navController.navigate(Screen.HOME.name)
+        navController.navigate(Screen.HOME.name) {
+            popUpToTop(navController)
+        }
     } else {
         OnBoardingTips(navController, viewModel)
     }
@@ -119,7 +122,9 @@ fun OnBoardingTips(
                     .fillMaxWidth()
                     .padding(16.dp), onClick = {
                     if (pagerState.currentPage + 1 >= pagerState.pageCount) {
-                        navController.navigate(Screen.HOME.name)
+                        navController.navigate(Screen.HOME.name) {
+                            popUpToTop(navController)
+                        }
                         viewModel.saveOnBoardingState(true)
                     }
                     coroutineScope.launch {

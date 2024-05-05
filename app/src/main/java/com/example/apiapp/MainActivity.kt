@@ -44,7 +44,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             APIAppTheme {
-
                 AppNavHost(navController = rememberNavController())
             }
         }
