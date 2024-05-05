@@ -7,5 +7,5 @@ import javax.inject.Inject
 
 @Reusable
 class GetUpComingMoviesUseCase @Inject constructor(private val upComingRepository: UpComingRepository) {
-    suspend operator fun invoke() = upComingRepository.getUpcomingMovies()
+     operator fun invoke() = upComingRepository.getUpcomingMovies()
 }

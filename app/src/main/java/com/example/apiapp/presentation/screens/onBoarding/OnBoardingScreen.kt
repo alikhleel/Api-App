@@ -32,6 +32,8 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -92,7 +94,7 @@ fun OnBoardingTips(
                         .wrapContentHeight()
                         .fillMaxWidth()
                         .padding(bottom = 8.dp),
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.Center,
                 ) {
                     repeat(pagerState.pageCount) { iteration ->
                         val color =
@@ -158,10 +160,30 @@ fun BoardingPage(
                 painter = painterResource(id = tipPage.image),
                 contentDescription = null
             )
-            Column {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
-                Text(text = tipPage.title)
-                Text(text = tipPage.description)
+                Text(
+                    text = tipPage.title,
+                    fontSize = 22.sp,
+                    letterSpacing = 0.sp,
+                    color = Color.Black,
+                    lineHeight = 28.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    text = tipPage.description,
+                    fontSize = 16.sp,
+                    lineHeight = 24.sp,
+                    letterSpacing = 0.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    textAlign = TextAlign.Center
+                )
 
             }
 
