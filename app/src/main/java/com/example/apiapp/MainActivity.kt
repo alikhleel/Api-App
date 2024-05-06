@@ -3,6 +3,9 @@ package com.example.apiapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -27,17 +31,25 @@ import com.example.apiapp.presentation.navigation.AppNavHost
 import com.example.apiapp.presentation.navigation.BottomNavigationItem
 import com.example.apiapp.presentation.navigation.NavigationItem
 import com.example.apiapp.presentation.navigation.popUpToTop
+import com.example.apiapp.presentation.screens.onBoarding.OnBoardingViewModel
 import com.example.apiapp.ui.theme.APIAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+
+    private val onBoardingViewModel: OnBoardingViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen().setKeepOnScreenCondition {
+            !onBoardingViewModel.isLoading.value
+        }
 
         setContent {
             APIAppTheme {
+                val screen = onBoardingViewModel.startDestination
                 val navController = rememberNavController()
                 var showBottomBar by rememberSaveable { mutableStateOf(true) }
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -51,7 +63,9 @@ class MainActivity : ComponentActivity() {
                 }
                 Scaffold(modifier = Modifier.fillMaxWidth(), bottomBar = {
                     if (showBottomBar) {
-                        NavigationBar {
+                        NavigationBar(
+
+                        ) {
                             BottomNavigationBar(
                                 navigationSelectionItem, navController
                             )
@@ -59,7 +73,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }) { paddingValues ->
                     Box(modifier = Modifier.padding(paddingValues)) {
-                        AppNavHost(navController = navController)
+                        AppNavHost(navController = navController, startDestination = screen)
                     }
                 }
             }
@@ -67,6 +81,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun RowScope.BottomNavigationBar(
     navigationSelectionItem: MutableIntState, navController: NavHostController
@@ -83,8 +98,22 @@ private fun RowScope.BottomNavigationBar(
                 navigationSelectionItem.intValue = index
                 navController.navigate(navigationItem.route) {
                     popUpToTop(navController)
+                    restoreState = true
+                    launchSingleTop = true
                 }
-            })
+            },
+            modifier = Modifier.combinedClickable {
+                if (navigationSelectionItem.intValue == index) {
+                    navController.navigate(navigationItem.route) {
+                        popUpToTop(navController)
+                        restoreState = true
+                        launchSingleTop = true
+
+                    }
+
+                }
+            }
+        )
 
     }
 }

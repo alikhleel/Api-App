@@ -11,15 +11,19 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.example.apiapp.presentation.screens.movieDetails.MovieDetailsScreen
+import com.example.apiapp.presentation.screens.movieDetails.MovieDetailsViewModel
 import com.example.apiapp.presentation.screens.onBoarding.OnBoardingScreen
 import com.example.apiapp.presentation.screens.onBoarding.OnBoardingViewModel
 import com.example.apiapp.presentation.screens.upcoming.UpComingMoviesScreen
 import com.example.apiapp.presentation.screens.upcoming.UpComingMoviesViewModel
 
 enum class Screen {
-    ONBOARDING, HOME, Search, Profile
+    ONBOARDING, HOME, Search, Profile, MOVIE_DETAILS
 }
 
 sealed class NavigationItem(val route: String) {
@@ -27,6 +31,7 @@ sealed class NavigationItem(val route: String) {
     data object OnBoarding : NavigationItem(Screen.ONBOARDING.name)
     data object Search : NavigationItem(Screen.Search.name)
     data object Profile : NavigationItem(Screen.Profile.name)
+    data object MovieDetails : NavigationItem(Screen.MOVIE_DETAILS.name)
 }
 
 @Composable
@@ -36,6 +41,7 @@ fun AppNavHost(
     startDestination: String = NavigationItem.OnBoarding.route,
 ) {
     val onBoardingViewModel: OnBoardingViewModel = hiltViewModel()
+
     NavHost(
         modifier = modifier,
         navController = navController,
@@ -48,11 +54,26 @@ fun AppNavHost(
             Surface {}
         }
 
+        composable(
+            NavigationItem.MovieDetails.route + "/{movieId}",
+            arguments = listOf(
+                navArgument(
+                    "movieId"
+                ) {
+                    NavType.IntType
+                }
+            )
+        ) {
+            val viewModel: MovieDetailsViewModel = hiltViewModel()
+            MovieDetailsScreen(viewModel = viewModel)
+        }
+
         composable(NavigationItem.Home.route) {
             val viewModel: UpComingMoviesViewModel = hiltViewModel()
-
             UpComingMoviesScreen(navController, viewModel)
         }
+
+
     }
 }
 
@@ -79,5 +100,6 @@ data class BottomNavigationItem(
 fun NavOptionsBuilder.popUpToTop(navController: NavHostController) {
     popUpTo(navController.currentBackStackEntry?.destination?.route ?: return) {
         inclusive = true
+        saveState = true
     }
 }

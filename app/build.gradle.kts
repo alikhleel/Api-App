@@ -75,6 +75,7 @@ dependencies {
     //hilt
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.core.splashscreen)
     kapt(libs.hilt.android.compiler)
 
     //retrofit
@@ -107,6 +108,7 @@ dependencies {
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.datastore.preferences)
+
 
 
     // checker

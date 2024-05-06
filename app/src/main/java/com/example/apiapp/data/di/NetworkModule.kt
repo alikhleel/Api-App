@@ -4,6 +4,7 @@ import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.example.apiapp.Constants.MOVIE_BASE_URL
 import com.example.apiapp.data.remote.MovieApi
+import com.example.apiapp.data.remote.MovieDetailsApi
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -53,5 +54,19 @@ object NetworkModule {
             .addConverterFactory(converterFactory)
             .build()
             .create(MovieApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMovieDetailsApi(
+        okhttpClient: OkHttpClient,
+        converterFactory: GsonConverterFactory,
+    ): MovieDetailsApi {
+        return Retrofit.Builder()
+            .baseUrl(MOVIE_BASE_URL)
+            .client(okhttpClient)
+            .addConverterFactory(converterFactory)
+            .build()
+            .create(MovieDetailsApi::class.java)
     }
 }

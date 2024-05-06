@@ -1,4 +1,4 @@
-package com.example.apiapp.domain.upcoming.onBoarding
+package com.example.apiapp.domain.onBoarding
 
 import com.example.apiapp.data.dataStore.MovieAppDataStore
 import javax.inject.Inject

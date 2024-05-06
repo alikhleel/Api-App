@@ -15,25 +15,9 @@ import javax.inject.Singleton
 class UpComingRepository @Inject constructor(
     private val movieApi: MovieApi
 ) {
-//    suspend fun getUpcomingMovies(): UIState<UpComingResponse> {
-//        return try {
-//            val response = movieApi.getUpcoming()
-//            if (response.isSuccessful && response.body() != null) {
-//                UIState.Success(response.body())
-//            } else {
-//                UIState.Empty(message = response.message().toString())
-//            }
-//        } catch (e: Exception) {
-//            UIState.Error(e.message.toString())
-//        }
-//
-//    }
-
     fun getUpcomingMovies(): Flow<PagingData<Results>> {
         return Pager(config = PagingConfig(
             pageSize = 20, prefetchDistance = 2
         ), pagingSourceFactory = { MoviePagingSource(movieApi) }).flow
-
     }
-
 }
