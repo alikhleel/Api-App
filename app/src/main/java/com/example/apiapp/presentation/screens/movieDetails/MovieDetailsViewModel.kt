@@ -1,6 +1,5 @@
 package com.example.apiapp.presentation.screens.movieDetails
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.apiapp.domain.movieDetails.GetMovieDetailsUseCase
@@ -14,22 +13,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MovieDetailsViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase
 ) : ViewModel() {
-    private val movieId: String = checkNotNull(savedStateHandle["movieId"])
+    var movieDetailState: MutableStateFlow<UIState<MovieDetailsResponse>> =
+        MutableStateFlow(UIState.Loading())
 
-    val movieDetailsState =
-        MutableStateFlow<UIState<MovieDetailsResponse>>(UIState.Empty())
-
-    init {
-        getMovieDetails(movieId.toInt())
-    }
-
-    private fun getMovieDetails(movieId: Int) {
-        movieDetailsState.value = UIState.Loading()
+    fun getMovieDetails(id: Int) {
         viewModelScope.launch {
-            movieDetailsState.value = getMovieDetailsUseCase(movieId)
+            when (val response = getMovieDetailsUseCase(id)) {
+                is UIState.Success -> movieDetailState.value = UIState.Success(response.data)
+                is UIState.Error -> movieDetailState.value = UIState.Error(response.error)
+                is UIState.Empty -> movieDetailState.value = UIState.Empty(title = response.title)
+                is UIState.Loading -> movieDetailState.value = UIState.Loading()
+            }
         }
     }
 }

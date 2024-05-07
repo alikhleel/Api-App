@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,12 +34,19 @@ import com.example.apiapp.model.UIState
 
 @Composable
 fun MovieDetailsScreen(
+    movieId: Int?,
     viewModel: MovieDetailsViewModel
 ) {
+    LaunchedEffect(movieId) {
+        if (movieId != null) {
+            viewModel.getMovieDetails(movieId)
+        }
+    }
+    val state = viewModel.movieDetailState.collectAsState()
+
     Surface(
         modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.primaryContainer
     ) {
-        val state = viewModel.movieDetailsState.collectAsState()
         when (val movieDetailsState = state.value) {
             is UIState.Loading -> {
                 CircularProgressIndicator()

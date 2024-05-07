@@ -35,87 +35,89 @@ import com.example.apiapp.presentation.navigation.NavigationItem
 @Composable
 fun UpComingMoviesScreen(navController: NavHostController, viewModel: UpComingMoviesViewModel) {
     val moviePagingItems = viewModel.upComingMoviesState.collectAsLazyPagingItems()
+
     Surface(
         modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.primaryContainer
     ) {
 
 
-    }
-    Box {
+        Box {
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            items(moviePagingItems.itemCount) {
+            LazyVerticalGrid(
+                state = viewModel.lazyState.value,
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                items(moviePagingItems.itemCount) {
 
-                val movie = moviePagingItems[it]!!
-                if (movie.adult == false) {
-                    val imageUrl =
-                        "${Constants.MOVIE_IMAGE_BASE_URL}${BackdropSizes.SMALL.value}${movie.posterPath}"
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                            .clickable {
-                                navController.navigate("${NavigationItem.MovieDetails.route}/${movie.id}")
-                            },
+                    val movie = moviePagingItems[it]!!
+                    if (movie.adult == false) {
+                        val imageUrl =
+                            "${Constants.MOVIE_IMAGE_BASE_URL}${BackdropSizes.SMALL.value}${movie.posterPath}"
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                                .clickable {
+                                    navController.navigate("${NavigationItem.MovieDetails.route}/${movie.id}")
+                                },
 
-                        ) {
-                        AsyncImage(
-                            model = imageUrl,
-                            modifier = Modifier.fillMaxWidth(),
-                            contentDescription = "",
-                            contentScale = ContentScale.FillWidth,
-                            error = painterResource(id = R.drawable.ic_launcher_background),
-                            placeholder = ColorPainter(Color.Red)
-                        )
+                            ) {
+                            AsyncImage(
+                                model = imageUrl,
+                                modifier = Modifier.fillMaxWidth(),
+                                contentDescription = "",
+                                contentScale = ContentScale.FillWidth,
+                                error = painterResource(id = R.drawable.ic_launcher_background),
+                                placeholder = ColorPainter(Color.Red)
+                            )
+                        }
                     }
                 }
             }
-        }
-        moviePagingItems.apply {
-            when {
-                loadState.refresh is LoadState.Loading -> {
-                    Row(
-                        Modifier.fillMaxSize(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        CircularProgressIndicator()
+            moviePagingItems.apply {
+                when {
+                    loadState.refresh is LoadState.Loading -> {
+                        Row(
+                            Modifier.fillMaxSize(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
-                }
 
-                loadState.refresh is LoadState.Error -> {
-                    val error = moviePagingItems.loadState.refresh as LoadState.Error
-                    Row(
-                        Modifier.fillMaxSize(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    loadState.refresh is LoadState.Error -> {
+                        val error = moviePagingItems.loadState.refresh as LoadState.Error
+                        Row(
+                            Modifier.fillMaxSize(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(text = error.error.localizedMessage.orEmpty())
+                        }
+                    }
+
+                    loadState.append is LoadState.Loading -> {
+                        Row(
+                            Modifier.fillMaxSize(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.Bottom
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+
+                    loadState.append is LoadState.Error -> {
+                        val error = moviePagingItems.loadState.append as LoadState.Error
                         Text(text = error.error.localizedMessage.orEmpty())
                     }
-                }
 
-                loadState.append is LoadState.Loading -> {
-                    Row(
-                        Modifier.fillMaxSize(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.Bottom
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
-
-                loadState.append is LoadState.Error -> {
-                    val error = moviePagingItems.loadState.append as LoadState.Error
-                    Text(text = error.error.localizedMessage.orEmpty())
                 }
 
             }
-
         }
     }
 }

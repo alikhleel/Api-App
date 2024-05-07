@@ -1,5 +1,7 @@
 package com.example.apiapp.presentation.screens.upcoming
 
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -16,6 +18,7 @@ import javax.inject.Inject
 class UpComingMoviesViewModel @Inject constructor(
     private val getUpComingMoviesUseCase: GetUpComingMoviesUseCase
 ) : ViewModel() {
+    val lazyState = mutableStateOf(LazyGridState())
     var upComingMoviesState: MutableStateFlow<PagingData<Results>> =
         MutableStateFlow(PagingData.empty())
 
@@ -31,6 +34,5 @@ class UpComingMoviesViewModel @Inject constructor(
                 }
         }
     }
-
 
 }

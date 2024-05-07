@@ -19,6 +19,8 @@ import com.example.apiapp.presentation.screens.movieDetails.MovieDetailsScreen
 import com.example.apiapp.presentation.screens.movieDetails.MovieDetailsViewModel
 import com.example.apiapp.presentation.screens.onBoarding.OnBoardingScreen
 import com.example.apiapp.presentation.screens.onBoarding.OnBoardingViewModel
+import com.example.apiapp.presentation.screens.search.SearchMultiScreen
+import com.example.apiapp.presentation.screens.search.SearchMultiViewModel
 import com.example.apiapp.presentation.screens.upcoming.UpComingMoviesScreen
 import com.example.apiapp.presentation.screens.upcoming.UpComingMoviesViewModel
 
@@ -50,22 +52,20 @@ fun AppNavHost(
         composable(NavigationItem.OnBoarding.route) {
             OnBoardingScreen(navController, onBoardingViewModel)
         }
-        composable(NavigationItem.Search.route) {
-            Surface {}
+
+        composable("${NavigationItem.MovieDetails.route}/{id}", arguments = listOf(
+            navArgument("id") {
+                type = NavType.IntType
+            }
+        )) {
+            val viewModel = hiltViewModel<MovieDetailsViewModel>()
+            MovieDetailsScreen(viewModel = viewModel, movieId = it.arguments?.getInt("id"))
+
         }
 
-        composable(
-            NavigationItem.MovieDetails.route + "/{movieId}",
-            arguments = listOf(
-                navArgument(
-                    "movieId"
-                ) {
-                    NavType.IntType
-                }
-            )
-        ) {
-            val viewModel: MovieDetailsViewModel = hiltViewModel()
-            MovieDetailsScreen(viewModel = viewModel)
+        composable(NavigationItem.Search.route) {
+            val viewModel: SearchMultiViewModel = hiltViewModel()
+            SearchMultiScreen(navController, viewModel)
         }
 
         composable(NavigationItem.Home.route) {
