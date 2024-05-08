@@ -4,7 +4,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -19,6 +18,8 @@ import com.example.apiapp.presentation.screens.movieDetails.MovieDetailsScreen
 import com.example.apiapp.presentation.screens.movieDetails.MovieDetailsViewModel
 import com.example.apiapp.presentation.screens.onBoarding.OnBoardingScreen
 import com.example.apiapp.presentation.screens.onBoarding.OnBoardingViewModel
+import com.example.apiapp.presentation.screens.profile.ProfileScreen
+import com.example.apiapp.presentation.screens.profile.ProfileViewModel
 import com.example.apiapp.presentation.screens.search.SearchMultiScreen
 import com.example.apiapp.presentation.screens.search.SearchMultiViewModel
 import com.example.apiapp.presentation.screens.upcoming.UpComingMoviesScreen
@@ -53,11 +54,11 @@ fun AppNavHost(
             OnBoardingScreen(navController, onBoardingViewModel)
         }
 
-        composable("${NavigationItem.MovieDetails.route}/{id}", arguments = listOf(
-            navArgument("id") {
+        composable(
+            "${NavigationItem.MovieDetails.route}/{id}", arguments = listOf(navArgument("id") {
                 type = NavType.IntType
-            }
-        )) {
+            })
+        ) {
             val viewModel = hiltViewModel<MovieDetailsViewModel>()
             MovieDetailsScreen(viewModel = viewModel, movieId = it.arguments?.getInt("id"))
 
@@ -71,6 +72,11 @@ fun AppNavHost(
         composable(NavigationItem.Home.route) {
             val viewModel: UpComingMoviesViewModel = hiltViewModel()
             UpComingMoviesScreen(navController, viewModel)
+        }
+
+        composable(NavigationItem.Profile.route) {
+            val viewModel: ProfileViewModel = hiltViewModel()
+            ProfileScreen(navController,viewModel)
         }
 
 

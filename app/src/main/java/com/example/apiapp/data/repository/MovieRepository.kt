@@ -9,6 +9,8 @@ import com.example.apiapp.data.remote.MovieApi
 import com.example.apiapp.model.MovieDetailsResponse
 import com.example.apiapp.model.Results
 import com.example.apiapp.model.UIState
+import com.example.apiapp.model.UserAccount
+import com.example.apiapp.model.UserTokenResponse
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -43,6 +45,45 @@ class MovieRepository @Inject constructor(
             }
         } catch (e: Exception) {
             UIState.Error(e.message ?: "An unknown error occurred")
+        }
+    }
+
+    suspend fun createUserToken(): UIState<UserTokenResponse> {
+        return try {
+            val response = movieApi.createUserToken()
+            if (response.isSuccessful && response.body() != null) {
+                UIState.Success(response.body())
+            } else {
+                UIState.Empty(message = response.message().toString())
+            }
+        } catch (e: Exception) {
+            UIState.Error(e.message.toString())
+        }
+    }
+
+    suspend fun createNewSession(requestToken: String): UIState<UserTokenResponse> {
+        return try {
+            val response = movieApi.createSession(requestToken = requestToken)
+            if (response.isSuccessful && response.body() != null) {
+                UIState.Success(response.body())
+            } else {
+                UIState.Empty(message = response.message().toString())
+            }
+        } catch (e: Exception) {
+            UIState.Error(e.message.toString())
+        }
+    }
+
+    suspend fun getUserAccount(sessionId: String): UIState<UserAccount> {
+        return try {
+            val response = movieApi.getUserAccount(sessionId = sessionId)
+            if (response.isSuccessful && response.body() != null) {
+                UIState.Success(response.body())
+            } else {
+                UIState.Empty(message = response.message().toString())
+            }
+        } catch (e: Exception) {
+            UIState.Error(e.message.toString())
         }
     }
 }
