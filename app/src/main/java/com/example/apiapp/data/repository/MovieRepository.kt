@@ -3,8 +3,8 @@ package com.example.apiapp.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.example.apiapp.data.local.dao.MovieDao
 import com.example.apiapp.data.paging.MoviePagingSource
-import com.example.apiapp.data.paging.MovieSearchPagingSource
 import com.example.apiapp.data.remote.MovieApi
 import com.example.apiapp.model.MovieDetailsResponse
 import com.example.apiapp.model.Results
@@ -18,18 +18,26 @@ import javax.inject.Singleton
 
 @Singleton
 class MovieRepository @Inject constructor(
-    private val movieApi: MovieApi
+    private val movieApi: MovieApi, private val movieDao: MovieDao
 ) {
     fun getUpcomingMovies(): Flow<PagingData<Results>> {
         return Pager(config = PagingConfig(
             pageSize = 20, prefetchDistance = 2
-        ), pagingSourceFactory = { MoviePagingSource(movieApi) }).flow
+        ), pagingSourceFactory = {
+            MoviePagingSource(
+                movieApi, isSearchEndPoint = false, movieDao = movieDao
+            )
+        }).flow
     }
 
     fun searchMulti(query: String): Flow<PagingData<Results>> {
         return Pager(config = PagingConfig(
             pageSize = 20, prefetchDistance = 2
-        ), pagingSourceFactory = { MovieSearchPagingSource(movieApi, query) }).flow
+        ), pagingSourceFactory = {
+            MoviePagingSource(
+                movieApi, isSearchEndPoint = true, searchQuery = query, movieDao = movieDao
+            )
+        }).flow
     }
 
 

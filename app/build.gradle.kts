@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.dagger.hilt.android")
-
     kotlin("kapt")
 }
 
@@ -83,6 +82,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation( libs.okhttp)
     implementation(libs.logging.interceptor)
+
     // KotlinX Serialization
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit2.kotlinx.serialization.converter)
@@ -109,6 +109,11 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.datastore.preferences)
 
+
+    //room database
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
 
 
     // checker
