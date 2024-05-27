@@ -100,13 +100,15 @@ fun MovieDetails(movieDetailsResponse: MovieDetailsResponse) {
 
         item {
             Text(
-                text = movieDetailsResponse.title, color = Color.Black
+                text = movieDetailsResponse.title.orEmpty(), color = Color.Black
 
             )
         }
         item {
             Text(
-                text = movieDetailsResponse.overview, color = Color.Black, fontSize = 20.sp,
+                text = movieDetailsResponse.overview.orEmpty(),
+                color = Color.Black,
+                fontSize = 20.sp,
             )
         }
 
